@@ -412,7 +412,13 @@ body {
   border-radius: 10px;
   font-size: 11px;
   color: var(--score-text);
-  font-weight: 500;
+  cursor: help;
+}
+
+.score-icon {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
 }
 
 /* Loading state */

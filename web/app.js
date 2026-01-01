@@ -157,7 +157,12 @@ function createCard(article) {
       </div>
       <h2 class="card-title">${article.title}</h2>
       <p class="card-description">${cleanDescription}</p>
-      <span class="card-score">${positivityPercent}%</span>
+      <span class="card-score" title="Positivity score based on AI sentiment analysis">
+        <svg class="score-icon" viewBox="0 0 24 24" fill="currentColor" width="12" height="12">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+        ${positivityPercent}% positive
+      </span>
     </div>
   `;
 
