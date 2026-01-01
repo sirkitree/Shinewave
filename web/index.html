@@ -33,19 +33,73 @@
     </div>
   </header>
 
-  <nav class="source-tabs" id="sourceTabs">
-    <button class="source-tab active" data-source="">All</button>
-    <button class="source-tab" data-source="Optimist Daily">Optimist Daily</button>
-    <button class="source-tab" data-source="Good News Network">Good News</button>
-    <button class="source-tab" data-source="Positive News">Positive News</button>
-  </nav>
+  <div class="main-layout">
+    <button class="sidebar-toggle" id="sidebarToggle">
+      <span class="sidebar-toggle-icon">☰</span>
+      <span id="sourceCount">9 sources</span>
+    </button>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h3>Sources</h3>
+        <button class="select-all-btn" id="selectAllBtn">Select All</button>
+      </div>
+      <div class="source-list" id="sourceList">
+        <label class="source-item">
+          <input type="checkbox" data-source="Optimist Daily" checked>
+          <span class="source-checkbox"></span>
+          <span class="source-label">Optimist Daily</span>
+        </label>
+        <label class="source-item">
+          <input type="checkbox" data-source="Good News Network" checked>
+          <span class="source-checkbox"></span>
+          <span class="source-label">Good News Network</span>
+        </label>
+        <label class="source-item">
+          <input type="checkbox" data-source="Positive News" checked>
+          <span class="source-checkbox"></span>
+          <span class="source-label">Positive News</span>
+        </label>
+        <label class="source-item">
+          <input type="checkbox" data-source="Sunny Skyz" checked>
+          <span class="source-checkbox"></span>
+          <span class="source-label">Sunny Skyz</span>
+        </label>
+        <label class="source-item">
+          <input type="checkbox" data-source="Upworthy" checked>
+          <span class="source-checkbox"></span>
+          <span class="source-label">Upworthy</span>
+        </label>
+        <label class="source-item">
+          <input type="checkbox" data-source="Reasons to be Cheerful" checked>
+          <span class="source-checkbox"></span>
+          <span class="source-label">Reasons to be Cheerful</span>
+        </label>
+        <label class="source-item">
+          <input type="checkbox" data-source="Good News EU" checked>
+          <span class="source-checkbox"></span>
+          <span class="source-label">Good News EU</span>
+        </label>
+        <label class="source-item">
+          <input type="checkbox" data-source="The Better India" checked>
+          <span class="source-checkbox"></span>
+          <span class="source-label">The Better India</span>
+        </label>
+        <label class="source-item">
+          <input type="checkbox" data-source="Good Good Good" checked>
+          <span class="source-checkbox"></span>
+          <span class="source-label">Good Good Good</span>
+        </label>
+      </div>
+    </aside>
 
-  <main class="feed" id="feed">
+    <main class="feed" id="feed">
     <div class="loading" id="loading">
       <div class="spinner"></div>
       <p class="loading-text">Loading</p>
     </div>
-  </main>
+    </main>
+  </div>
 
   <script src="app.js"></script>
 </body>

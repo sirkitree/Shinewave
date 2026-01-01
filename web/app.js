@@ -2,9 +2,15 @@ const API_BASE = '/api';
 const feed = document.getElementById('feed');
 const loading = document.getElementById('loading');
 const themeToggle = document.getElementById('themeToggle');
-const sourceTabs = document.getElementById('sourceTabs');
+const sourceList = document.getElementById('sourceList');
+const selectAllBtn = document.getElementById('selectAllBtn');
+const sidebar = document.getElementById('sidebar');
+const sidebarToggle = document.getElementById('sidebarToggle');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+const sourceCount = document.getElementById('sourceCount');
 
-let currentSource = '';
+let selectedSources = new Set();
+let allArticles = [];
 
 // SVG icons for theme toggle
 const sunIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -195,39 +201,50 @@ function showError(message) {
   `;
 }
 
-// Fetch and render news
-async function loadNews(source = '') {
+// Initialize selected sources from checkboxes
+function initSelectedSources() {
+  const checkboxes = sourceList.querySelectorAll('input[type="checkbox"]');
+  checkboxes.forEach(cb => {
+    if (cb.checked) {
+      selectedSources.add(cb.dataset.source);
+    }
+  });
+  updateSourceCount();
+  updateSelectAllButton();
+}
+
+// Update source count display
+function updateSourceCount() {
+  const total = sourceList.querySelectorAll('input[type="checkbox"]').length;
+  const selected = selectedSources.size;
+  sourceCount.textContent = `${selected}/${total} sources`;
+}
+
+// Update select all button text
+function updateSelectAllButton() {
+  const checkboxes = sourceList.querySelectorAll('input[type="checkbox"]');
+  const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+  selectAllBtn.textContent = allChecked ? 'Deselect All' : 'Select All';
+}
+
+// Fetch all news
+async function loadNews() {
   try {
     feed.innerHTML = '';
     loading.classList.remove('hidden');
     feed.appendChild(loading);
 
-    let url = `${API_BASE}/news?limit=50`;
-    if (source) {
-      url += `&source=${encodeURIComponent(source)}`;
-    }
-
-    const response = await fetch(url);
+    const response = await fetch(`${API_BASE}/news?limit=100`);
 
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
     }
 
     const data = await response.json();
+    allArticles = data.data || [];
 
     loading.classList.add('hidden');
-
-    if (!data.data || data.data.length === 0) {
-      showEmptyState();
-      return;
-    }
-
-    feed.innerHTML = '';
-
-    for (const article of data.data) {
-      const card = createCard(article);
-      feed.appendChild(card);
-    }
+    renderFilteredArticles();
 
   } catch (error) {
     console.error('Failed to load news:', error);
@@ -236,17 +253,76 @@ async function loadNews(source = '') {
   }
 }
 
-// Handle source tab clicks
-function handleSourceTabClick(e) {
-  if (!e.target.classList.contains('source-tab')) return;
+// Render articles based on selected sources
+function renderFilteredArticles() {
+  const filtered = allArticles.filter(article => selectedSources.has(article.source));
 
-  document.querySelectorAll('.source-tab').forEach(tab => {
-    tab.classList.remove('active');
+  if (filtered.length === 0) {
+    if (selectedSources.size === 0) {
+      feed.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">${createWavePlaceholder()}</div>
+          <h2 class="empty-state-title">No sources selected</h2>
+          <p>Select at least one source to see stories.</p>
+        </div>
+      `;
+    } else {
+      showEmptyState();
+    }
+    return;
+  }
+
+  feed.innerHTML = '';
+  for (const article of filtered) {
+    const card = createCard(article);
+    feed.appendChild(card);
+  }
+}
+
+// Handle source checkbox changes
+function handleSourceChange(e) {
+  if (e.target.type !== 'checkbox') return;
+
+  const source = e.target.dataset.source;
+  if (e.target.checked) {
+    selectedSources.add(source);
+  } else {
+    selectedSources.delete(source);
+  }
+
+  updateSourceCount();
+  updateSelectAllButton();
+  renderFilteredArticles();
+}
+
+// Handle select all / deselect all
+function handleSelectAll() {
+  const checkboxes = sourceList.querySelectorAll('input[type="checkbox"]');
+  const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+
+  checkboxes.forEach(cb => {
+    cb.checked = !allChecked;
+    if (!allChecked) {
+      selectedSources.add(cb.dataset.source);
+    } else {
+      selectedSources.delete(cb.dataset.source);
+    }
   });
-  e.target.classList.add('active');
 
-  currentSource = e.target.dataset.source;
-  loadNews(currentSource);
+  updateSourceCount();
+  updateSelectAllButton();
+  renderFilteredArticles();
+}
+
+// Mobile sidebar toggle
+function toggleSidebar() {
+  sidebar.classList.toggle('open');
+  sidebarOverlay.classList.toggle('visible');
+}
+
+function closeSidebar() {
+  sidebar.classList.remove('open');
+  sidebarOverlay.classList.remove('visible');
 }
 
 // Pull-to-refresh
@@ -271,7 +347,7 @@ document.addEventListener('touchend', (e) => {
   const pullDistance = touchY - touchStartY;
 
   if (pullDistance > 100 && window.scrollY === 0) {
-    loadNews(currentSource);
+    loadNews();
   }
 
   isPulling = false;
@@ -279,8 +355,12 @@ document.addEventListener('touchend', (e) => {
 
 // Event listeners
 themeToggle.addEventListener('click', toggleTheme);
-sourceTabs.addEventListener('click', handleSourceTabClick);
+sourceList.addEventListener('change', handleSourceChange);
+selectAllBtn.addEventListener('click', handleSelectAll);
+sidebarToggle.addEventListener('click', toggleSidebar);
+sidebarOverlay.addEventListener('click', closeSidebar);
 
 // Initialize
 initTheme();
+initSelectedSources();
 loadNews();

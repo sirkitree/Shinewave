@@ -111,52 +111,130 @@ body {
   line-height: 1;
 }
 
-/* Source tabs - Pill style */
-.source-tabs {
+/* Main layout with sidebar */
+.main-layout {
   display: flex;
-  gap: 8px;
-  padding: 12px 20px;
-  background: var(--bg-primary);
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+  min-height: calc(100vh - 65px);
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--bg-card);
+  border-right: 1px solid var(--border-color);
   position: sticky;
   top: 65px;
-  z-index: 99;
+  height: calc(100vh - 65px);
+  overflow-y: auto;
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 
-.source-tabs::-webkit-scrollbar {
-  display: none;
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color);
 }
 
-.source-tab {
-  flex-shrink: 0;
-  padding: 8px 16px;
+.sidebar-header h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.select-all-btn {
+  background: none;
   border: none;
-  border-radius: 20px;
-  background: var(--bg-card);
-  color: var(--text-secondary);
-  font-size: 13px;
+  color: var(--gold);
+  font-size: 12px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.2s ease;
   font-family: inherit;
 }
 
-.source-tab:hover {
-  color: var(--gold);
+.select-all-btn:hover {
+  background: var(--score-bg);
 }
 
-.source-tab.active {
+.source-list {
+  padding: 8px 0;
+}
+
+.source-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.source-item:hover {
+  background: var(--bg-primary);
+}
+
+.source-item input {
+  display: none;
+}
+
+.source-checkbox {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border-color);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.source-checkbox::after {
+  content: '';
+  width: 10px;
+  height: 10px;
   background: var(--gold);
-  color: white;
+  border-radius: 2px;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.2s ease;
+}
+
+.source-item input:checked + .source-checkbox {
+  border-color: var(--gold);
+}
+
+.source-item input:checked + .source-checkbox::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.source-label {
+  font-size: 13px;
+  color: var(--text-primary);
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+.source-item input:not(:checked) ~ .source-label {
+  color: var(--text-secondary);
+  text-decoration: line-through;
+  opacity: 0.7;
 }
 
 /* Feed */
 .feed {
-  max-width: 560px;
+  flex: 1;
+  max-width: 640px;
   margin: 0 auto;
   padding: 16px 20px;
+  min-width: 0;
 }
 
 /* Card - Clean, minimal */
@@ -339,14 +417,88 @@ body {
   font-size: 14px;
 }
 
+/* Mobile sidebar toggle */
+.sidebar-toggle {
+  display: none;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  margin: 12px 16px;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.sidebar-toggle:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.sidebar-toggle-icon {
+  margin-right: 6px;
+}
+
 /* Responsive */
+@media (max-width: 768px) {
+  .main-layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 65px;
+    bottom: 0;
+    width: 260px;
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.1);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    top: 65px;
+    background: rgba(0,0,0,0.4);
+    z-index: 199;
+  }
+
+  .sidebar-overlay.visible {
+    display: block;
+  }
+
+  .sidebar-toggle {
+    display: flex;
+    align-items: center;
+  }
+
+  .feed {
+    padding: 0 16px 16px;
+  }
+}
+
 @media (max-width: 640px) {
   .header {
     padding: 14px 16px;
   }
 
-  .feed {
-    padding: 12px 16px;
+  .sidebar {
+    top: 57px;
+    height: calc(100vh - 57px);
+  }
+
+  .sidebar-overlay {
+    top: 57px;
   }
 
   .card {
@@ -360,11 +512,6 @@ body {
 
   .card-title {
     font-size: 16px;
-  }
-
-  .source-tabs {
-    padding: 10px 16px;
-    top: 57px;
   }
 }
 

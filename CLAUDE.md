@@ -20,13 +20,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Scheduler**: node-cron
 - **Frontend**: Vanilla HTML/CSS/JS (Google Discover-style)
 
-## News Sources (MVP)
+## News Sources
 
-| Source | Feed URL | Images |
-|--------|----------|--------|
-| Optimist Daily | https://www.optimistdaily.com/feed/ | From RSS content |
-| Good News Network | https://www.goodnewsnetwork.org/feed/ | Scraped from og:image |
-| Positive News | https://www.positive.news/feed/ | Scraped from og:image |
+| Source | Feed URL | Notes |
+|--------|----------|-------|
+| Optimist Daily | https://www.optimistdaily.com/feed/ | Original source |
+| Good News Network | https://www.goodnewsnetwork.org/feed/ | Original source |
+| Positive News | https://www.positive.news/feed/ | Original source |
+| Sunny Skyz | https://feeds.feedburner.com/SunnySkyz | Uplifting stories |
+| Upworthy | https://www.upworthy.com/feeds/feed.rss | High-engagement content |
+| Reasons to be Cheerful | https://reasonstobecheerful.world/feed/ | Solutions journalism |
+| Good News EU | https://goodnews.eu/feed/ | European focus |
+| The Better India | https://www.thebetterindia.com/feed/ | Indian focus |
+| Good Good Good | https://www.goodgoodgood.co/articles/rss.xml | Hopeful stories |
 
 ## Architecture
 
@@ -64,10 +70,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Frontend Features
 
 - **Card-based feed**: Google Discover-style article cards with images
-- **Source filtering**: Tabs to filter by All / Optimist Daily / Good News / Positive News
+- **Source sidebar**: Vertical sidebar with checkboxes to toggle sources on/off
+  - Select/Deselect All button for quick toggling
+  - Client-side filtering for instant updates
+  - Collapsible on mobile (slides in from left)
 - **Dark mode**: Toggle in header, respects system preference, persists to localStorage
 - **Pull-to-refresh**: On mobile, pull down to reload articles
-- **Responsive**: Mobile-first design with sticky header and tabs
+- **Responsive**: Desktop sidebar (240px), mobile slide-out panel
 
 ## Build Commands
 
@@ -109,7 +118,7 @@ POSITIVITY_THRESHOLD=0.7  # Optional: Minimum score to include (0-1, default: 0.
 ## MVP Scope
 
 **Included:**
-- Fetch news from 3 sources (RSS + page scraping for images)
+- Fetch news from 9 sources (RSS + page scraping for images)
 - Score articles for positivity via Claude API (Haiku)
 - Store qualifying articles in SQLite with images
 - Serve via REST API with pagination and filtering

@@ -26,6 +26,36 @@ export const sources: NewsSource[] = [
     url: 'https://www.positive.news/feed/',
     type: 'rss',
   },
+  {
+    name: 'Sunny Skyz',
+    url: 'https://feeds.feedburner.com/SunnySkyz',
+    type: 'rss',
+  },
+  {
+    name: 'Upworthy',
+    url: 'https://www.upworthy.com/feeds/feed.rss',
+    type: 'rss',
+  },
+  {
+    name: 'Reasons to be Cheerful',
+    url: 'https://reasonstobecheerful.world/feed/',
+    type: 'rss',
+  },
+  {
+    name: 'Good News EU',
+    url: 'https://goodnews.eu/feed/',
+    type: 'rss',
+  },
+  {
+    name: 'The Better India',
+    url: 'https://www.thebetterindia.com/feed/',
+    type: 'rss',
+  },
+  {
+    name: 'Good Good Good',
+    url: 'https://www.goodgoodgood.co/articles/rss.xml',
+    type: 'rss',
+  },
 ];
 
 export function validateConfig(): void {
