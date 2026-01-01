@@ -206,16 +206,37 @@ function showError(message) {
   `;
 }
 
-// Initialize selected sources from checkboxes
+// Initialize selected sources from localStorage or defaults
 function initSelectedSources() {
+  const saved = localStorage.getItem('selectedSources');
   const checkboxes = sourceList.querySelectorAll('input[type="checkbox"]');
-  checkboxes.forEach(cb => {
-    if (cb.checked) {
-      selectedSources.add(cb.dataset.source);
-    }
-  });
+
+  if (saved) {
+    // Restore from localStorage
+    const savedSources = JSON.parse(saved);
+    checkboxes.forEach(cb => {
+      const isSelected = savedSources.includes(cb.dataset.source);
+      cb.checked = isSelected;
+      if (isSelected) {
+        selectedSources.add(cb.dataset.source);
+      }
+    });
+  } else {
+    // Use defaults (all checked)
+    checkboxes.forEach(cb => {
+      if (cb.checked) {
+        selectedSources.add(cb.dataset.source);
+      }
+    });
+  }
+
   updateSourceCount();
   updateSelectAllButton();
+}
+
+// Save selected sources to localStorage
+function saveSelectedSources() {
+  localStorage.setItem('selectedSources', JSON.stringify([...selectedSources]));
 }
 
 // Update source count display
@@ -297,6 +318,7 @@ function handleSourceChange(e) {
 
   updateSourceCount();
   updateSelectAllButton();
+  saveSelectedSources();
   renderFilteredArticles();
 }
 
@@ -316,6 +338,7 @@ function handleSelectAll() {
 
   updateSourceCount();
   updateSelectAllButton();
+  saveSelectedSources();
   renderFilteredArticles();
 }
 
