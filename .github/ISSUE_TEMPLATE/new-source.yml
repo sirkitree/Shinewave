@@ -1,0 +1,71 @@
+name: Suggest a New Source
+description: Suggest a positive news source to add to Shinewave
+title: "[Source]: "
+labels: ["new-source"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new positive news source! Please fill out the details below.
+
+  - type: input
+    id: source-name
+    attributes:
+      label: Source Name
+      description: The name of the news source
+      placeholder: e.g., Good News Network
+    validations:
+      required: true
+
+  - type: input
+    id: website-url
+    attributes:
+      label: Website URL
+      description: The main website URL
+      placeholder: e.g., https://www.goodnewsnetwork.org
+    validations:
+      required: true
+
+  - type: input
+    id: rss-feed
+    attributes:
+      label: RSS Feed URL
+      description: The RSS feed URL (if known)
+      placeholder: e.g., https://www.goodnewsnetwork.org/feed/
+    validations:
+      required: false
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Brief description of why this source is a good fit for Shinewave
+      placeholder: This source focuses on uplifting stories about...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: focus
+    attributes:
+      label: Content Focus
+      description: What type of positive content does this source provide?
+      options:
+        - General positive news
+        - Solutions journalism
+        - Inspiring human stories
+        - Environmental good news
+        - Science & innovation
+        - Community & local
+        - Other
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: verification
+    attributes:
+      label: Verification
+      options:
+        - label: I have verified this source publishes positive/uplifting content
+          required: true
+        - label: I have checked that this source is not already included in Shinewave
+          required: true
