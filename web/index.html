@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#F5A623">
+  <meta name="description" content="Shinewave - Positive news from around the world">
+  <title>Shinewave</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="apple-touch-icon" href="assets/logo.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-top">
+      <div class="logo">
+        <svg class="logo-mark" viewBox="0 0 200 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#E8A832"/>
+              <stop offset="40%" stop-color="#F5A623"/>
+              <stop offset="100%" stop-color="#E89923"/>
+            </linearGradient>
+          </defs>
+          <path d="M 20 80 Q 50 80, 70 50 Q 90 20, 110 50 Q 130 80, 160 20" stroke="url(#logoGradient)" stroke-width="8" stroke-linecap="round" fill="none"/>
+        </svg>
+        <span class="logo-text">Shinewave</span>
+      </div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <span class="theme-icon"></span>
+      </button>
+    </div>
+  </header>
+
+  <nav class="source-tabs" id="sourceTabs">
+    <button class="source-tab active" data-source="">All</button>
+    <button class="source-tab" data-source="Optimist Daily">Optimist Daily</button>
+    <button class="source-tab" data-source="Good News Network">Good News</button>
+    <button class="source-tab" data-source="Positive News">Positive News</button>
+  </nav>
+
+  <main class="feed" id="feed">
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      <p class="loading-text">Loading</p>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
