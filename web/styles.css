@@ -295,10 +295,50 @@ body {
 /* Feed */
 .feed {
   flex: 1;
-  max-width: 640px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 16px 20px;
   min-width: 0;
+}
+
+/* Masonry layout for wider screens */
+@supports (grid-template-rows: masonry) {
+  /* Native CSS Masonry (Firefox Nightly, future browsers) */
+  @media (min-width: 900px) {
+    .feed {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: masonry;
+      gap: 16px;
+    }
+    .feed .card {
+      margin-bottom: 0;
+    }
+  }
+  @media (min-width: 1400px) {
+    .feed {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+}
+
+/* Fallback: CSS Columns masonry (all browsers) */
+@supports not (grid-template-rows: masonry) {
+  @media (min-width: 900px) {
+    .feed {
+      column-count: 2;
+      column-gap: 16px;
+    }
+    .feed .card {
+      break-inside: avoid;
+      margin-bottom: 16px;
+    }
+  }
+  @media (min-width: 1400px) {
+    .feed {
+      column-count: 3;
+    }
+  }
 }
 
 /* Card - Clean, minimal */
@@ -429,6 +469,8 @@ body {
   justify-content: center;
   padding: 60px 20px;
   color: var(--text-secondary);
+  column-span: all; /* For CSS columns fallback */
+  grid-column: 1 / -1; /* For CSS Grid masonry */
 }
 
 .loading.hidden {
@@ -458,6 +500,8 @@ body {
   text-align: center;
   padding: 60px 20px;
   color: var(--text-secondary);
+  column-span: all;
+  grid-column: 1 / -1;
 }
 
 .empty-state-icon {
@@ -485,6 +529,8 @@ body {
   border-radius: 12px;
   color: var(--error-text);
   font-size: 14px;
+  column-span: all;
+  grid-column: 1 / -1;
 }
 
 /* Mobile sidebar toggle */
