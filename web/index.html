@@ -46,10 +46,22 @@
       <span id="sourceCount">9 sources</span>
     </button>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <button class="sidebar-expand-btn" id="sidebarExpandBtn" aria-label="Expand sidebar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+        <path d="M9 18l6-6-6-6"/>
+      </svg>
+    </button>
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
         <h3>Sources</h3>
-        <button class="select-all-btn" id="selectAllBtn">Select All</button>
+        <div class="sidebar-header-actions">
+          <button class="select-all-btn" id="selectAllBtn">Select All</button>
+          <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" aria-label="Collapse sidebar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+              <path d="M15 18l-6-6 6-6"/>
+            </svg>
+          </button>
+        </div>
       </div>
       <div class="source-list" id="sourceList">
         <label class="source-item">

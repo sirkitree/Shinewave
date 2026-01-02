@@ -8,6 +8,8 @@ const sidebar = document.getElementById('sidebar');
 const sidebarToggle = document.getElementById('sidebarToggle');
 const sidebarOverlay = document.getElementById('sidebarOverlay');
 const sourceCount = document.getElementById('sourceCount');
+const sidebarCollapseBtn = document.getElementById('sidebarCollapseBtn');
+const sidebarExpandBtn = document.getElementById('sidebarExpandBtn');
 
 let selectedSources = new Set();
 let allArticles = [];
@@ -353,6 +355,24 @@ function closeSidebar() {
   sidebarOverlay.classList.remove('visible');
 }
 
+// Desktop sidebar collapse/expand
+function initSidebarState() {
+  const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+  if (isCollapsed) {
+    sidebar.classList.add('collapsed');
+  }
+}
+
+function collapseSidebar() {
+  sidebar.classList.add('collapsed');
+  localStorage.setItem('sidebarCollapsed', 'true');
+}
+
+function expandSidebar() {
+  sidebar.classList.remove('collapsed');
+  localStorage.setItem('sidebarCollapsed', 'false');
+}
+
 // Pull-to-refresh
 let touchStartY = 0;
 let isPulling = false;
@@ -387,8 +407,11 @@ sourceList.addEventListener('change', handleSourceChange);
 selectAllBtn.addEventListener('click', handleSelectAll);
 sidebarToggle.addEventListener('click', toggleSidebar);
 sidebarOverlay.addEventListener('click', closeSidebar);
+sidebarCollapseBtn.addEventListener('click', collapseSidebar);
+sidebarExpandBtn.addEventListener('click', expandSidebar);
 
 // Initialize
 initTheme();
+initSidebarState();
 initSelectedSources();
 loadNews();

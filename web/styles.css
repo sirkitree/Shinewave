@@ -177,6 +177,12 @@ body {
   margin: 0;
 }
 
+.sidebar-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .select-all-btn {
   background: none;
   border: none;
@@ -192,6 +198,67 @@ body {
 
 .select-all-btn:hover {
   background: var(--score-bg);
+}
+
+/* Sidebar collapse button */
+.sidebar-collapse-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.sidebar-collapse-btn:hover {
+  background: var(--bg-primary);
+  color: var(--gold);
+}
+
+/* Sidebar expand button (when collapsed) */
+.sidebar-expand-btn {
+  display: none;
+  position: sticky;
+  top: 65px;
+  left: 0;
+  height: calc(100vh - 65px);
+  width: 32px;
+  background: var(--bg-card);
+  border: none;
+  border-right: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.sidebar-expand-btn:hover {
+  background: var(--bg-primary);
+  color: var(--gold);
+}
+
+/* Desktop sidebar collapse behavior */
+@media (min-width: 769px) {
+  .sidebar-collapse-btn {
+    display: flex;
+  }
+
+  .sidebar.collapsed {
+    display: none;
+  }
+
+  .sidebar.collapsed + .feed,
+  .main-layout:has(.sidebar.collapsed) .feed {
+    max-width: 1400px;
+  }
+
+  .main-layout:has(.sidebar.collapsed) .sidebar-expand-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 .source-list {
