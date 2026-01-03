@@ -31,11 +31,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | Upworthy | https://www.upworthy.com/feeds/feed.rss | High-engagement content |
 | Reasons to be Cheerful | https://reasonstobecheerful.world/feed/ | Solutions journalism |
 | Good News EU | https://goodnews.eu/feed/ | European focus |
-| The Better India | https://www.thebetterindia.com/feed/ | Indian focus |
 | Good Good Good | https://www.goodgoodgood.co/articles/rss.xml | Hopeful stories |
 | Quanta Magazine | https://www.quantamagazine.org/feed/ | Science journalism |
 | NPR Health | https://feeds.npr.org/1128/rss.xml | Health breakthroughs |
 | Not All News Is Bad | https://notallnewsisbad.com/feed | Curated positive news |
+| Hacker News | https://news.ycombinator.com/rss | Tech news aggregator |
 
 ## Architecture
 

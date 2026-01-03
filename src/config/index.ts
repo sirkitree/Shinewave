@@ -47,11 +47,6 @@ export const sources: NewsSource[] = [
     type: 'rss',
   },
   {
-    name: 'The Better India',
-    url: 'https://www.thebetterindia.com/feed/',
-    type: 'rss',
-  },
-  {
     name: 'Good Good Good',
     url: 'https://www.goodgoodgood.co/articles/rss.xml',
     type: 'rss',
@@ -69,6 +64,11 @@ export const sources: NewsSource[] = [
   {
     name: 'Not All News Is Bad',
     url: 'https://notallnewsisbad.com/feed',
+    type: 'rss',
+  },
+  {
+    name: 'Hacker News',
+    url: 'https://news.ycombinator.com/rss',
     type: 'rss',
   },
 ];
