@@ -56,6 +56,11 @@ export const sources: NewsSource[] = [
     url: 'https://www.goodgoodgood.co/articles/rss.xml',
     type: 'rss',
   },
+  {
+    name: 'Quanta Magazine',
+    url: 'https://www.quantamagazine.org/feed/',
+    type: 'rss',
+  },
 ];
 
 export function validateConfig(): void {

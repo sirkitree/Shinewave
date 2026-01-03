@@ -1,5 +1,6 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { getArticles, getArticleById } from '../db/index.js';
+import { sources } from '../config/index.js';
 
 interface NewsQuerystring {
   page?: string;
@@ -43,4 +44,10 @@ export async function newsRoutes(fastify: FastifyInstance): Promise<void> {
       return reply.send(article);
     }
   );
+
+  fastify.get('/api/sources', async (request, reply) => {
+    return reply.send({
+      sources: sources.map(s => ({ name: s.name, type: s.type }))
+    });
+  });
 }

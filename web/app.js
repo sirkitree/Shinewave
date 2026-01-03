@@ -208,6 +208,35 @@ function showError(message) {
   `;
 }
 
+// Fetch sources from API and render them
+async function loadSources() {
+  try {
+    const response = await fetch(`${API_BASE}/sources`);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+
+    const saved = localStorage.getItem('selectedSources');
+    const savedSources = saved ? JSON.parse(saved) : null;
+
+    sourceList.innerHTML = data.sources.map(source => {
+      const isChecked = savedSources ? savedSources.includes(source.name) : true;
+      if (isChecked) selectedSources.add(source.name);
+      return `
+        <label class="source-item">
+          <input type="checkbox" data-source="${source.name}" ${isChecked ? 'checked' : ''}>
+          <span class="source-checkbox"></span>
+          <span class="source-label">${source.name}</span>
+        </label>
+      `;
+    }).join('');
+
+    updateSourceCount();
+    updateSelectAllButton();
+  } catch (error) {
+    console.error('Failed to load sources:', error);
+  }
+}
+
 // Initialize selected sources from localStorage or defaults
 function initSelectedSources() {
   const saved = localStorage.getItem('selectedSources');
@@ -413,5 +442,4 @@ sidebarExpandBtn.addEventListener('click', expandSidebar);
 // Initialize
 initTheme();
 initSidebarState();
-initSelectedSources();
-loadNews();
+loadSources().then(() => loadNews());

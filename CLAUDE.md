@@ -33,6 +33,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | Good News EU | https://goodnews.eu/feed/ | European focus |
 | The Better India | https://www.thebetterindia.com/feed/ | Indian focus |
 | Good Good Good | https://www.goodgoodgood.co/articles/rss.xml | Hopeful stories |
+| Quanta Magazine | https://www.quantamagazine.org/feed/ | Science journalism |
 
 ## Architecture
 
