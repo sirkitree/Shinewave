@@ -61,6 +61,16 @@ export const sources: NewsSource[] = [
     url: 'https://www.quantamagazine.org/feed/',
     type: 'rss',
   },
+  {
+    name: 'NPR Health',
+    url: 'https://feeds.npr.org/1128/rss.xml',
+    type: 'rss',
+  },
+  {
+    name: 'Not All News Is Bad',
+    url: 'https://notallnewsisbad.com/feed',
+    type: 'rss',
+  },
 ];
 
 export function validateConfig(): void {

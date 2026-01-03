@@ -38,16 +38,19 @@ export function insertArticle(article: Article): boolean {
   return result.changes > 0;
 }
 
-export function getArticles(params: PaginationParams, source?: string): PaginatedResponse<Article> {
+export function getArticles(params: PaginationParams, sources?: string[]): PaginatedResponse<Article> {
   const { page, limit } = params;
   const offset = (page - 1) * limit;
 
   let countQuery = 'SELECT COUNT(*) as total FROM articles';
   let dataQuery = 'SELECT * FROM articles';
+  let queryParams: (string | number)[] = [];
 
-  if (source) {
-    countQuery += ' WHERE source = ?';
-    dataQuery += ' WHERE source = ?';
+  if (sources && sources.length > 0) {
+    const placeholders = sources.map(() => '?').join(', ');
+    countQuery += ` WHERE source IN (${placeholders})`;
+    dataQuery += ` WHERE source IN (${placeholders})`;
+    queryParams = [...sources];
   }
 
   dataQuery += ' ORDER BY publishedAt DESC LIMIT ? OFFSET ?';
@@ -55,14 +58,9 @@ export function getArticles(params: PaginationParams, source?: string): Paginate
   const countStmt = db.prepare(countQuery);
   const dataStmt = db.prepare(dataQuery);
 
-  const countResult = source
-    ? (countStmt.get(source) as { total: number })
-    : (countStmt.get() as { total: number });
-
+  const countResult = countStmt.get(...queryParams) as { total: number };
   const total = countResult.total;
-  const data = source
-    ? (dataStmt.all(source, limit, offset) as Article[])
-    : (dataStmt.all(limit, offset) as Article[]);
+  const data = dataStmt.all(...queryParams, limit, offset) as Article[];
 
   return {
     data,

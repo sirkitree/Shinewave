@@ -34,6 +34,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | The Better India | https://www.thebetterindia.com/feed/ | Indian focus |
 | Good Good Good | https://www.goodgoodgood.co/articles/rss.xml | Hopeful stories |
 | Quanta Magazine | https://www.quantamagazine.org/feed/ | Science journalism |
+| NPR Health | https://feeds.npr.org/1128/rss.xml | Health breakthroughs |
+| Not All News Is Bad | https://notallnewsisbad.com/feed | Curated positive news |
 
 ## Architecture
 
@@ -119,7 +121,7 @@ POSITIVITY_THRESHOLD=0.7  # Optional: Minimum score to include (0-1, default: 0.
 ## MVP Scope
 
 **Included:**
-- Fetch news from 9 sources (RSS + page scraping for images)
+- Fetch news from 12 sources (RSS + page scraping for images)
 - Score articles for positivity via Claude API (Haiku)
 - Store qualifying articles in SQLite with images
 - Serve via REST API with pagination and filtering

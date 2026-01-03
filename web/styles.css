@@ -705,3 +705,116 @@ body {
   color: var(--text-secondary);
   font-size: 13px;
 }
+
+/* Pagination */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--bg-card);
+  border-radius: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  column-span: all;
+  grid-column: 1 / -1;
+  position: sticky;
+  top: 65px;
+  z-index: 40;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.pagination.hidden {
+  display: none;
+}
+
+.pagination-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pagination-btn svg {
+  flex-shrink: 0;
+}
+
+.pagination-info {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  min-width: 100px;
+  text-align: center;
+}
+
+.pagination-size {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 16px;
+  padding-left: 16px;
+  border-left: 1px solid var(--border-color);
+}
+
+.pagination-size label {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.pagination-size select {
+  padding: 8px 12px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination-size select:hover {
+  border-color: var(--gold);
+}
+
+.pagination-size select:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+@media (max-width: 640px) {
+  .pagination {
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .pagination-size {
+    width: 100%;
+    justify-content: center;
+    margin-left: 0;
+    padding-left: 0;
+    border-left: none;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
+  }
+}

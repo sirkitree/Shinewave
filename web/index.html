@@ -77,10 +77,33 @@
     </aside>
 
     <main class="feed" id="feed">
-    <div class="loading" id="loading">
-      <div class="spinner"></div>
-      <p class="loading-text">Loading</p>
-    </div>
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p class="loading-text">Loading</p>
+      </div>
+      <div class="pagination" id="pagination">
+        <button class="pagination-btn" id="prevPage" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+          Prev
+        </button>
+        <span class="pagination-info" id="pageInfo">Page 1</span>
+        <button class="pagination-btn" id="nextPage">
+          Next
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </button>
+        <div class="pagination-size">
+          <label for="pageSize">Show:</label>
+          <select id="pageSize">
+            <option value="25">25</option>
+            <option value="50" selected>50</option>
+            <option value="100">100</option>
+          </select>
+        </div>
+      </div>
     </main>
   </div>
 

@@ -10,9 +10,17 @@ const sidebarOverlay = document.getElementById('sidebarOverlay');
 const sourceCount = document.getElementById('sourceCount');
 const sidebarCollapseBtn = document.getElementById('sidebarCollapseBtn');
 const sidebarExpandBtn = document.getElementById('sidebarExpandBtn');
+const prevPageBtn = document.getElementById('prevPage');
+const nextPageBtn = document.getElementById('nextPage');
+const pageInfo = document.getElementById('pageInfo');
+const pageSizeSelect = document.getElementById('pageSize');
+const pagination = document.getElementById('pagination');
 
 let selectedSources = new Set();
 let allArticles = [];
+let currentPage = 1;
+let pageSize = parseInt(localStorage.getItem('pageSize') || '50', 10);
+let totalArticles = 0;
 
 // SVG icons for theme toggle
 const sunIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -196,6 +204,7 @@ function showEmptyState() {
       <p>Positive news is on its way.</p>
     </div>
   `;
+  feed.prepend(pagination);
 }
 
 // Show error state
@@ -284,14 +293,28 @@ function updateSelectAllButton() {
   selectAllBtn.textContent = allChecked ? 'Deselect All' : 'Select All';
 }
 
-// Fetch all news
+// Fetch news with pagination
 async function loadNews() {
   try {
     feed.innerHTML = '';
     loading.classList.remove('hidden');
     feed.appendChild(loading);
+    pagination.classList.add('hidden');
 
-    const response = await fetch(`${API_BASE}/news?limit=100`);
+    // If no sources selected, show empty state without API call
+    if (selectedSources.size === 0) {
+      loading.classList.add('hidden');
+      allArticles = [];
+      totalArticles = 0;
+      renderArticles();
+      updatePagination();
+      return;
+    }
+
+    const sourcesParam = [...selectedSources].join(',');
+    const url = `${API_BASE}/news?limit=${pageSize}&page=${currentPage}&sources=${encodeURIComponent(sourcesParam)}`;
+
+    const response = await fetch(url);
 
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
@@ -299,9 +322,11 @@ async function loadNews() {
 
     const data = await response.json();
     allArticles = data.data || [];
+    totalArticles = data.pagination?.total || allArticles.length;
 
     loading.classList.add('hidden');
-    renderFilteredArticles();
+    renderArticles();
+    updatePagination();
 
   } catch (error) {
     console.error('Failed to load news:', error);
@@ -310,11 +335,52 @@ async function loadNews() {
   }
 }
 
-// Render articles based on selected sources
-function renderFilteredArticles() {
-  const filtered = allArticles.filter(article => selectedSources.has(article.source));
+// Update pagination controls
+function updatePagination() {
+  const totalPages = Math.ceil(totalArticles / pageSize);
 
-  if (filtered.length === 0) {
+  pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+  prevPageBtn.disabled = currentPage <= 1;
+  nextPageBtn.disabled = currentPage >= totalPages;
+
+  pagination.classList.toggle('hidden', totalArticles <= pageSize);
+}
+
+// Handle page size change
+function handlePageSizeChange(e) {
+  pageSize = parseInt(e.target.value, 10);
+  localStorage.setItem('pageSize', pageSize.toString());
+  currentPage = 1;
+  loadNews();
+}
+
+// Handle previous page
+function handlePrevPage() {
+  if (currentPage > 1) {
+    currentPage--;
+    loadNews();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+// Handle next page
+function handleNextPage() {
+  const totalPages = Math.ceil(totalArticles / pageSize);
+  if (currentPage < totalPages) {
+    currentPage++;
+    loadNews();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+// Initialize pagination
+function initPagination() {
+  pageSizeSelect.value = pageSize.toString();
+}
+
+// Render articles
+function renderArticles() {
+  if (allArticles.length === 0) {
     if (selectedSources.size === 0) {
       feed.innerHTML = `
         <div class="empty-state">
@@ -323,6 +389,7 @@ function renderFilteredArticles() {
           <p>Select at least one source to see stories.</p>
         </div>
       `;
+      feed.prepend(pagination);
     } else {
       showEmptyState();
     }
@@ -330,7 +397,8 @@ function renderFilteredArticles() {
   }
 
   feed.innerHTML = '';
-  for (const article of filtered) {
+  feed.appendChild(pagination);
+  for (const article of allArticles) {
     const card = createCard(article);
     feed.appendChild(card);
   }
@@ -350,7 +418,8 @@ function handleSourceChange(e) {
   updateSourceCount();
   updateSelectAllButton();
   saveSelectedSources();
-  renderFilteredArticles();
+  currentPage = 1;
+  loadNews();
 }
 
 // Handle select all / deselect all
@@ -370,7 +439,8 @@ function handleSelectAll() {
   updateSourceCount();
   updateSelectAllButton();
   saveSelectedSources();
-  renderFilteredArticles();
+  currentPage = 1;
+  loadNews();
 }
 
 // Mobile sidebar toggle
@@ -438,8 +508,12 @@ sidebarToggle.addEventListener('click', toggleSidebar);
 sidebarOverlay.addEventListener('click', closeSidebar);
 sidebarCollapseBtn.addEventListener('click', collapseSidebar);
 sidebarExpandBtn.addEventListener('click', expandSidebar);
+prevPageBtn.addEventListener('click', handlePrevPage);
+nextPageBtn.addEventListener('click', handleNextPage);
+pageSizeSelect.addEventListener('change', handlePageSizeChange);
 
 // Initialize
 initTheme();
 initSidebarState();
+initPagination();
 loadSources().then(() => loadNews());

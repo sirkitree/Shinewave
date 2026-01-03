@@ -5,7 +5,7 @@ import { sources } from '../config/index.js';
 interface NewsQuerystring {
   page?: string;
   limit?: string;
-  source?: string;
+  sources?: string;
 }
 
 interface NewsParams {
@@ -18,9 +18,10 @@ export async function newsRoutes(fastify: FastifyInstance): Promise<void> {
     async (request, reply) => {
       const page = Math.max(1, parseInt(request.query.page || '1', 10));
       const limit = Math.min(100, Math.max(1, parseInt(request.query.limit || '20', 10)));
-      const source = request.query.source;
+      const sourcesParam = request.query.sources;
+      const sourcesArray = sourcesParam ? sourcesParam.split(',').map(s => s.trim()) : undefined;
 
-      const result = getArticles({ page, limit }, source);
+      const result = getArticles({ page, limit }, sourcesArray);
 
       return reply.send(result);
     }
