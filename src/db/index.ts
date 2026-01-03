@@ -26,6 +26,21 @@ export function initializeDatabase(): void {
   db.exec(`
     CREATE INDEX IF NOT EXISTS idx_articles_source ON articles(source)
   `);
+
+  // Track rejected URLs to avoid re-analyzing them
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS rejected_urls (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      url TEXT UNIQUE NOT NULL,
+      source TEXT NOT NULL,
+      score REAL NOT NULL,
+      rejectedAt TEXT NOT NULL
+    )
+  `);
+
+  db.exec(`
+    CREATE INDEX IF NOT EXISTS idx_rejected_urls_url ON rejected_urls(url)
+  `);
 }
 
 export function insertArticle(article: Article): boolean {
@@ -81,6 +96,19 @@ export function getArticleById(id: number): Article | undefined {
 export function articleExists(url: string): boolean {
   const stmt = db.prepare('SELECT 1 FROM articles WHERE url = ?');
   return stmt.get(url) !== undefined;
+}
+
+export function urlWasRejected(url: string): boolean {
+  const stmt = db.prepare('SELECT 1 FROM rejected_urls WHERE url = ?');
+  return stmt.get(url) !== undefined;
+}
+
+export function insertRejectedUrl(url: string, source: string, score: number): void {
+  const stmt = db.prepare(`
+    INSERT OR IGNORE INTO rejected_urls (url, source, score, rejectedAt)
+    VALUES (?, ?, ?, ?)
+  `);
+  stmt.run(url, source, score, new Date().toISOString());
 }
 
 export { db };

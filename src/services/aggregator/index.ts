@@ -1,6 +1,6 @@
 import Parser from 'rss-parser';
 import { sources } from '../../config/index.js';
-import { insertArticle, articleExists } from '../../db/index.js';
+import { insertArticle, articleExists, urlWasRejected, insertRejectedUrl } from '../../db/index.js';
 import { analyzePositivity } from '../sentiment/index.js';
 import type { Article, NewsSource } from '../../types/index.js';
 
@@ -153,7 +153,7 @@ export async function fetchAllSources(maxArticles?: number): Promise<{
       processed++;
       totalProcessed++;
 
-      if (!article.url || articleExists(article.url)) {
+      if (!article.url || articleExists(article.url) || urlWasRejected(article.url)) {
         skipped++;
         continue;
       }
@@ -191,6 +191,7 @@ export async function fetchAllSources(maxArticles?: number): Promise<{
           }
         } else {
           console.log(`  Skipped (low score ${sentiment.score.toFixed(2)}): ${article.title}`);
+          insertRejectedUrl(article.url, source.name, sentiment.score);
           skipped++;
         }
       } catch (error) {
