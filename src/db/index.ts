@@ -24,6 +24,10 @@ export function initializeDatabase(): void {
   `);
 
   db.exec(`
+    CREATE INDEX IF NOT EXISTS idx_articles_fetchedAt ON articles(fetchedAt DESC)
+  `);
+
+  db.exec(`
     CREATE INDEX IF NOT EXISTS idx_articles_source ON articles(source)
   `);
 
@@ -68,7 +72,7 @@ export function getArticles(params: PaginationParams, sources?: string[]): Pagin
     queryParams = [...sources];
   }
 
-  dataQuery += ' ORDER BY publishedAt DESC LIMIT ? OFFSET ?';
+  dataQuery += ' ORDER BY fetchedAt DESC LIMIT ? OFFSET ?';
 
   const countStmt = db.prepare(countQuery);
   const dataStmt = db.prepare(dataQuery);
