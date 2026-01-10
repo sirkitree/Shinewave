@@ -46,6 +46,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 │   ├── routes/               # API route handlers
 │   ├── services/
 │   │   ├── aggregator/       # RSS fetching + image scraping
+│   │   ├── language/         # Language detection (English filter)
 │   │   ├── sentiment/        # Claude API positivity scoring
 │   │   └── scheduler/        # Cron job management
 │   ├── db/                   # SQLite setup and queries
@@ -113,15 +114,17 @@ POSITIVITY_THRESHOLD=0.7  # Optional: Minimum score to include (0-1, default: 0.
 2. **Image Extraction**:
    - First tries RSS fields (enclosure, media:content, content:encoded)
    - Falls back to scraping og:image from article page
-3. **Sentiment Analysis**: Sends title + description to Claude Haiku for 0-1 positivity score
-4. **Storage**: Articles scoring above threshold stored in SQLite
-5. **Scheduling**: Cron job fetches new articles hourly
-6. **Frontend**: Card-based responsive UI pulls from REST API
+3. **Language Detection**: Filters out non-English articles using franc library (saves API calls)
+4. **Sentiment Analysis**: Sends title + description to Claude Haiku for 0-1 positivity score
+5. **Storage**: Articles scoring above threshold stored in SQLite
+6. **Scheduling**: Cron job fetches new articles hourly
+7. **Frontend**: Card-based responsive UI pulls from REST API
 
 ## MVP Scope
 
 **Included:**
 - Fetch news from 12 sources (RSS + page scraping for images)
+- Language detection to filter non-English articles
 - Score articles for positivity via Claude API (Haiku)
 - Store qualifying articles in SQLite with images
 - Serve via REST API with pagination and filtering

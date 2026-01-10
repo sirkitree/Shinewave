@@ -2,6 +2,7 @@ import Parser from 'rss-parser';
 import { sources } from '../../config/index.js';
 import { insertArticle, articleExists, urlWasRejected, insertRejectedUrl } from '../../db/index.js';
 import { analyzePositivity } from '../sentiment/index.js';
+import { isEnglish } from '../language/index.js';
 import type { Article, NewsSource } from '../../types/index.js';
 
 // Configure parser to include content:encoded
@@ -154,6 +155,14 @@ export async function fetchAllSources(maxArticles?: number): Promise<{
       totalProcessed++;
 
       if (!article.url || articleExists(article.url) || urlWasRejected(article.url)) {
+        skipped++;
+        continue;
+      }
+
+      // Check if article is in English before scoring
+      if (!isEnglish(article.title || '', article.description || '')) {
+        console.log(`  Skipped (non-English): ${article.title}`);
+        insertRejectedUrl(article.url, source.name, -1); // -1 indicates language rejection
         skipped++;
         continue;
       }
