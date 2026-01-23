@@ -36,6 +36,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | NPR Health | https://feeds.npr.org/1128/rss.xml | Health breakthroughs |
 | Not All News Is Bad | https://notallnewsisbad.com/feed | Curated positive news |
 | Hacker News | https://news.ycombinator.com/rss | Tech news aggregator |
+| Sam Bentley | https://www.youtube.com/feeds/videos.xml?channel_id=UCXQbZmsuSr3ndvN8NGlo7oQ | Monthly good news aggregations (YouTube) |
 
 ## Architecture
 

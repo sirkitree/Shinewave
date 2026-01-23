@@ -71,6 +71,11 @@ export const sources: NewsSource[] = [
     url: 'https://news.ycombinator.com/rss',
     type: 'rss',
   },
+  {
+    name: 'Sam Bentley',
+    url: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCXQbZmsuSr3ndvN8NGlo7oQ',
+    type: 'rss',
+  },
 ];
 
 export function validateConfig(): void {
