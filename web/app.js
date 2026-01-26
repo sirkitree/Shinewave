@@ -2,6 +2,7 @@ const API_BASE = '/api';
 const feed = document.getElementById('feed');
 const loading = document.getElementById('loading');
 const themeToggle = document.getElementById('themeToggle');
+const viewToggle = document.getElementById('viewToggle');
 const sourceList = document.getElementById('sourceList');
 const selectAllBtn = document.getElementById('selectAllBtn');
 const sidebar = document.getElementById('sidebar');
@@ -21,6 +22,7 @@ let allArticles = [];
 let currentPage = 1;
 let pageSize = parseInt(localStorage.getItem('pageSize') || '50', 10);
 let totalArticles = 0;
+let viewMode = localStorage.getItem('viewMode') || 'card';
 
 // SVG icons for theme toggle
 const sunIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -37,6 +39,23 @@ const sunIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" str
 
 const moonIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
   <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>`;
+
+// SVG icons for view toggle
+const cardIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+  <rect x="3" y="3" width="7" height="7"/>
+  <rect x="14" y="3" width="7" height="7"/>
+  <rect x="3" y="14" width="7" height="7"/>
+  <rect x="14" y="14" width="7" height="7"/>
+</svg>`;
+
+const listIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+  <line x1="8" y1="6" x2="21" y2="6"/>
+  <line x1="8" y1="12" x2="21" y2="12"/>
+  <line x1="8" y1="18" x2="21" y2="18"/>
+  <line x1="3" y1="6" x2="3.01" y2="6"/>
+  <line x1="3" y1="12" x2="3.01" y2="12"/>
+  <line x1="3" y1="18" x2="3.01" y2="18"/>
 </svg>`;
 
 // Theme management
@@ -69,6 +88,30 @@ function toggleTheme() {
 function updateThemeIcon(isDark) {
   const icon = themeToggle.querySelector('.theme-icon');
   icon.innerHTML = isDark ? sunIcon : moonIcon;
+}
+
+// View mode management
+function initViewMode() {
+  updateViewIcon();
+  updateFeedClass();
+}
+
+function toggleViewMode() {
+  viewMode = viewMode === 'card' ? 'list' : 'card';
+  localStorage.setItem('viewMode', viewMode);
+  updateViewIcon();
+  updateFeedClass();
+  renderArticles();
+}
+
+function updateViewIcon() {
+  const icon = viewToggle.querySelector('.view-icon');
+  // Show the opposite icon (what you'll switch TO)
+  icon.innerHTML = viewMode === 'card' ? listIcon : cardIcon;
+}
+
+function updateFeedClass() {
+  feed.classList.toggle('list-view', viewMode === 'list');
 }
 
 // Format relative time
@@ -193,6 +236,30 @@ function createCard(article) {
   }
 
   return card;
+}
+
+// Create a list item element (HN-style)
+function createListItem(article, index) {
+  const item = document.createElement('article');
+  item.className = 'list-item';
+
+  const timeAgo = formatTimeAgo(article.publishedAt);
+  const domain = new URL(article.url).hostname.replace('www.', '');
+
+  item.innerHTML = `
+    <span class="list-item-index">${index}.</span>
+    <div class="list-item-content">
+      <a href="${article.url}" target="_blank" rel="noopener" class="list-item-title">${article.title}</a>
+      <span class="list-item-domain">(${domain})</span>
+      <div class="list-item-meta">
+        <span class="list-item-source">${article.source}</span>
+        <span class="list-item-separator">|</span>
+        <span class="list-item-time">${timeAgo}</span>
+      </div>
+    </div>
+  `;
+
+  return item;
 }
 
 // Show empty state
@@ -380,6 +447,8 @@ function initPagination() {
 
 // Render articles
 function renderArticles() {
+  updateFeedClass();
+
   if (allArticles.length === 0) {
     if (selectedSources.size === 0) {
       feed.innerHTML = `
@@ -398,9 +467,18 @@ function renderArticles() {
 
   feed.innerHTML = '';
   feed.appendChild(pagination);
-  for (const article of allArticles) {
-    const card = createCard(article);
-    feed.appendChild(card);
+
+  const startIndex = (currentPage - 1) * pageSize + 1;
+
+  for (let i = 0; i < allArticles.length; i++) {
+    const article = allArticles[i];
+    if (viewMode === 'list') {
+      const listItem = createListItem(article, startIndex + i);
+      feed.appendChild(listItem);
+    } else {
+      const card = createCard(article);
+      feed.appendChild(card);
+    }
   }
 }
 
@@ -502,6 +580,7 @@ document.addEventListener('touchend', (e) => {
 
 // Event listeners
 themeToggle.addEventListener('click', toggleTheme);
+viewToggle.addEventListener('click', toggleViewMode);
 sourceList.addEventListener('change', handleSourceChange);
 selectAllBtn.addEventListener('click', handleSelectAll);
 sidebarToggle.addEventListener('click', toggleSidebar);
@@ -514,6 +593,7 @@ pageSizeSelect.addEventListener('change', handlePageSizeChange);
 
 // Initialize
 initTheme();
+initViewMode();
 initSidebarState();
 initPagination();
 loadSources().then(() => loadNews());
